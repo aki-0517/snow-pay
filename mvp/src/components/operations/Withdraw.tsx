@@ -4,14 +4,24 @@ import { Bounce, toast } from "react-toastify";
 interface WithdrawProps {
 	handlePrivateWithdraw: (amount: string) => Promise<void>;
 	isDecryptionKeySet: boolean;
+	balance: bigint | undefined;
 }
 
 export function Withdraw({
 	handlePrivateWithdraw,
 	isDecryptionKeySet,
+	balance,
 }: WithdrawProps) {
 	const [withdrawAmount, setWithdrawAmount] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
+
+	const formattedBalance = balance ? (Number(balance) / 10 ** 18).toFixed(4) : "0";
+
+	const handleMaxClick = () => {
+		if (balance) {
+			setWithdrawAmount((Number(balance) / 10 ** 18).toString());
+		}
+	};
 	return (
 		<>
 			<div className="flex-1">

@@ -17,7 +17,6 @@ import {
 import { avalancheFuji } from "wagmi/chains";
 import { Divider } from "../components";
 import { ConverterMode } from "../components/eerc/ConverterMode";
-import { StandaloneMode } from "../components/eerc/StandaloneMode";
 import { useWebComponents } from "../components/web-components";
 import {
   CIRCUIT_CONFIG,
@@ -32,7 +31,7 @@ import { useAppKit } from "@reown/appkit/react";
 export function EERC() {
   useWebComponents();
   const [txHash, setTxHash] = useState<`0x${string}`>("" as `0x${string}`);
-  const [mode, setMode] = useState<EERCMode>("standalone");
+  const [mode, setMode] = useState<EERCMode>("converter");
   const [showEncryptedDetails, setShowEncryptedDetails] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isTransactionPending, setIsTransactionPending] = useState(false);
@@ -49,7 +48,7 @@ export function EERC() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get("mode");
-    if (modeParam === "standalone" || modeParam === "converter")
+    if (modeParam === "converter")
       setMode(modeParam as EERCMode);
   }, []);
 
@@ -105,7 +104,6 @@ export function EERC() {
   // use eerc
   const {
     owner,
-    symbol,
     isAuditorKeySet,
     auditorPublicKey,
     isRegistered,
@@ -118,14 +116,12 @@ export function EERC() {
   } = useEERC(
     publicClient as CompatiblePublicClient,
     walletClient as CompatibleWalletClient,
-    mode === "converter" ? CONTRACTS.EERC_CONVERTER : CONTRACTS.EERC_STANDALONE,
+    CONTRACTS.EERC_CONVERTER,
     CIRCUIT_CONFIG
   );
 
   // use encrypted balance
   const {
-    privateMint,
-    privateBurn,
     privateTransfer,
     deposit,
     withdraw,
@@ -135,46 +131,6 @@ export function EERC() {
     refetchBalance,
   } = useEncryptedBalance(mode === "converter" ? CONTRACTS.ERC20 : undefined);
 
-  // handle private mint
-  const handlePrivateMint = async (amount: bigint) => {
-    if (!isConnected || !address) {
-      return;
-    }
-
-    setIsTransactionPending(true);
-    setTransactionType("Private Minting");
-    try {
-      const { transactionHash } = await privateMint(address, amount);
-      setTxHash(transactionHash as `0x${string}`);
-      refetchBalance();
-    } catch (error) {
-      console.error(error);
-      toast.error("Minting failed");
-      setIsTransactionPending(false);
-      setTransactionType("");
-    }
-  };
-
-  // handle private burn
-  const handlePrivateBurn = async (amount: bigint) => {
-    if (!isConnected) {
-      console.log("Not connected");
-      return;
-    }
-
-    setIsTransactionPending(true);
-    setTransactionType("Private Burning");
-    try {
-      const { transactionHash } = await privateBurn(amount);
-      setTxHash(transactionHash as `0x${string}`);
-      refetchBalance();
-    } catch (error) {
-      console.error(error);
-      toast.error("Burning failed");
-      setIsTransactionPending(false);
-      setTransactionType("");
-    }
-  };
 
   // handle private transfer
   const handlePrivateTransfer = async (to: string, amount: string) => {
@@ -371,19 +327,6 @@ export function EERC() {
       <div className="border border-cyber-green/30 rounded-md p-4 font-mono text-sm bg-black/10">
         <div className="text-cyber-green font-bold mb-2">📜 Contracts</div>
         <div className="grid grid-cols-[160px_1fr] gap-y-3 gap-x-4 items-center">
-          <div className="text-cyber-green">Standalone Mode</div>
-          <div className="text-cyber-green/80 break-all">
-            <div>{CONTRACTS.EERC_STANDALONE}</div>
-            <a
-              href={`${EXPLORER_BASE_URL}${CONTRACTS.EERC_STANDALONE}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-cyber-green/60 underline hover:text-cyber-green"
-            >
-              See on Explorer →
-            </a>
-          </div>
-
           <div className="text-cyber-green">Converter Mode</div>
           <div className="text-cyber-green/80 break-all">
             <div>{CONTRACTS.EERC_CONVERTER}</div>
@@ -593,62 +536,26 @@ export function EERC() {
       )}
 
       <div className="flex items-center space-x-4 font-mono text-sm text-cyber-gray justify-center my-3">
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-        <span
-          className={`cursor-pointer ${
-            mode === "standalone" ? "text-cyber-green font-bold" : "opacity-50"
-          }`}
-          onClick={() => setMode("standalone")}
-        >
-          Standalone Mode
-        </span>
-        <span className="text-cyber-green/40">|</span>
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-        <span
-          className={`cursor-pointer ${
-            mode === "converter" ? "text-cyber-green font-bold" : "opacity-50"
-          }`}
-          onClick={() => setMode("converter")}
-        >
+        <span className="text-cyber-green font-bold">
           Converter Mode
         </span>
       </div>
 
-      {mode === "standalone" ? (
-        <StandaloneMode
-          showEncryptedDetails={showEncryptedDetails}
-          setShowEncryptedDetails={setShowEncryptedDetails}
-          handlePrivateMint={handlePrivateMint}
-          handlePrivateBurn={handlePrivateBurn}
-          handlePrivateTransfer={handlePrivateTransfer}
-          publicKey={publicKey}
-          owner={owner}
-          decimals={Number(decimals)}
-          symbol={symbol}
-          isAuditorKeySet={isAuditorKeySet}
-          auditorPublicKey={auditorPublicKey}
-          encryptedBalance={encryptedBalance}
-          decryptedBalance={decryptedBalance}
-          isDecryptionKeySet={isDecryptionKeySet}
-          refetchBalance={refetchBalance}
-        />
-      ) : (
-        <ConverterMode
-          showEncryptedDetails={showEncryptedDetails}
-          setShowEncryptedDetails={setShowEncryptedDetails}
-          handlePrivateDeposit={handlePrivateDeposit}
-          handlePrivateWithdraw={handlePrivateWithdraw}
-          isDecryptionKeySet={isDecryptionKeySet}
-          publicKey={publicKey}
-          owner={owner}
-          isAuditorKeySet={isAuditorKeySet}
-          auditorPublicKey={auditorPublicKey}
-          encryptedBalance={encryptedBalance}
-          decryptedBalance={decryptedBalance}
-          refetchBalance={refetchBalance}
-          handlePrivateTransfer={handlePrivateTransfer}
-        />
-      )}
+      <ConverterMode
+        showEncryptedDetails={showEncryptedDetails}
+        setShowEncryptedDetails={setShowEncryptedDetails}
+        handlePrivateDeposit={handlePrivateDeposit}
+        handlePrivateWithdraw={handlePrivateWithdraw}
+        isDecryptionKeySet={isDecryptionKeySet}
+        publicKey={publicKey}
+        owner={owner}
+        isAuditorKeySet={isAuditorKeySet}
+        auditorPublicKey={auditorPublicKey}
+        encryptedBalance={encryptedBalance}
+        decryptedBalance={decryptedBalance}
+        refetchBalance={refetchBalance}
+        handlePrivateTransfer={handlePrivateTransfer}
+      />
     </main>
   );
 }
