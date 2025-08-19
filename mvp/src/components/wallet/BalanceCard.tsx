@@ -10,7 +10,7 @@ interface BalanceCardProps {
 export function BalanceCard({ balance, isPrivate = true }: BalanceCardProps) {
   const [showBalance, setShowBalance] = useState(true);
   
-  const formattedBalance = formatUnits(balance, 6); // DMT has 6 decimals
+  const formattedBalance = formatUnits(balance * 1000000n, 6); // Convert encrypted balance to e.DMT (multiply by 10^6)
 
   return (
     <div className="bg-gradient-to-br from-snow-primary to-snow-secondary p-6 rounded-xl text-white shadow-lg">

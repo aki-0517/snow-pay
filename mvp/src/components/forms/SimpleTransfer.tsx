@@ -16,7 +16,7 @@ export function SimpleTransfer({ eerc, onSuccess, balance }: SimpleTransferProps
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   
-  const formattedBalance = balance ? formatUnits(balance, 6) : "0.00";
+  const formattedBalance = balance ? formatUnits(balance * 1000000n, 6) : "0.00";
   
   const handleMaxClick = () => {
     setAmount(formattedBalance);
