@@ -70,12 +70,6 @@ export function ConverterMode({
 			address: ERC20_ADDRESS,
 		}) as { data: bigint; refetch: () => void };
 
-	const { data: erc20Symbol } = useReadContract({
-		abi: erc20Abi,
-		functionName: "symbol",
-		query: { enabled: !!address },
-		address: ERC20_ADDRESS,
-	}) as { data: string };
 
 	const { data: erc20Decimals } = useReadContract({
 		abi: erc20Abi,
@@ -239,8 +233,6 @@ export function ConverterMode({
 			</div>
 
 			<Operations
-				handlePrivateMint={() => Promise.resolve()}
-				handlePrivateBurn={() => Promise.resolve()}
 				handlePrivateTransfer={handlePrivateTransfer}
 				handlePrivateDeposit={handlePrivateDeposit}
 				handlePrivateWithdraw={handlePrivateWithdraw}
