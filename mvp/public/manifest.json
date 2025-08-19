@@ -1,0 +1,17 @@
+{
+  "name": "SnowPay - Private Wallet",
+  "short_name": "SnowPay",
+  "description": "Private wallet for secure transactions on Avalanche",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F9",
+  "theme_color": "#3055B3",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/snowpay-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
