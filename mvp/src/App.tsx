@@ -10,15 +10,15 @@ const SnowPay = lazy(() =>
 // Loading component
 const LoadingFallback = () => (
 	<div className="flex items-center justify-center h-64">
-		<div className="text-snow-gray">Loading...</div>
+		<div className="text-ava-dark-gray" style={{color: '#161617'}}>Loading...</div>
 	</div>
 );
 
 export function App() {
 	return (
-		<div className="min-h-screen bg-snow-light">
+		<div className="min-h-screen bg-ava-light-gray" style={{backgroundColor: '#F5F5F9'}}>
 			{/* Header */}
-			<header className="bg-snow-bg shadow-sm border-b border-gray-200">
+			<header className="bg-ava-white shadow-sm border-b border-ava-light-gray" style={{backgroundColor: '#FFFFFF', borderColor: '#F5F5F9'}}>
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						<Logo />
