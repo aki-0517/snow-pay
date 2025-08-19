@@ -10,10 +10,11 @@ interface OperationsModalProps {
   onClose: () => void;
   eerc: any; // EERC SDK instance
   onSuccess: () => void;
-  balance?: bigint;
+  balance?: bigint; // ERC20 balance for deposit
+  encryptedBalance?: bigint; // Encrypted balance for send/withdraw
 }
 
-export function OperationsModal({ operation, onClose, eerc, onSuccess, balance }: OperationsModalProps) {
+export function OperationsModal({ operation, onClose, eerc, onSuccess, balance, encryptedBalance }: OperationsModalProps) {
   if (!operation) return null;
 
   const titles = {
@@ -42,10 +43,10 @@ export function OperationsModal({ operation, onClose, eerc, onSuccess, balance }
             <SimpleDeposit eerc={eerc} onSuccess={onSuccess} balance={balance} />
           )}
           {operation === "withdraw" && (
-            <SimpleWithdraw eerc={eerc} onSuccess={onSuccess} balance={balance} />
+            <SimpleWithdraw eerc={eerc} onSuccess={onSuccess} balance={encryptedBalance} />
           )}
           {operation === "transfer" && (
-            <SimpleTransfer eerc={eerc} onSuccess={onSuccess} balance={balance} />
+            <SimpleTransfer eerc={eerc} onSuccess={onSuccess} balance={encryptedBalance} />
           )}
         </div>
       </div>

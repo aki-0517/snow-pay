@@ -36,7 +36,7 @@ export function SimpleWithdraw({ eerc, onSuccess, balance }: SimpleWithdrawProps
 
     try {
       setLoading(true);
-      // Parse amount to BigInt with 6 decimals (DMT)
+      // Parse amount to BigInt with 6 decimals (e.DMT)
       const parsedAmount = parseUnits(amount, 6);
       await eerc.withdraw(parsedAmount);
       onSuccess();
@@ -54,11 +54,11 @@ export function SimpleWithdraw({ eerc, onSuccess, balance }: SimpleWithdrawProps
       <div>
         <div className="flex justify-between items-center mb-2">
           <label className="block text-sm font-medium text-snow-dark">
-            Amount (DMT)
+            Amount (e.DMT)
           </label>
           {balance !== undefined && (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-snow-gray">Balance: {formattedBalance} DMT</span>
+              <span className="text-sm text-snow-gray">Balance: {formattedBalance} e.DMT</span>
               <button
                 type="button"
                 onClick={handleMaxClick}

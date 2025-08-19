@@ -3,7 +3,7 @@ import {
   type CompatibleWalletClient,
   useEERC,
 } from "@avalabs/eerc-sdk";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import {
   useAccount,
@@ -45,11 +45,25 @@ export function SnowPay() {
   // Use encrypted balance hook
   const {
     decryptedBalance,
+    encryptedBalance,
     deposit,
     withdraw,
     privateTransfer,
     refetchBalance,
   } = useEncryptedBalance(CONTRACTS.ERC20);
+
+  // Debug logging
+  console.log("MVP Debug - Encrypted Balance:", encryptedBalance);
+  console.log("MVP Debug - Decrypted Balance:", decryptedBalance);
+  console.log("MVP Debug - Is Decryption Key Set:", isDecryptionKeySet);
+
+  // Force refetch when decryption key is set or address changes
+  useEffect(() => {
+    if (isDecryptionKeySet && address && refetchBalance) {
+      console.log("MVP Debug - Refetching balance...");
+      refetchBalance();
+    }
+  }, [isDecryptionKeySet, address, refetchBalance]);
 
   // Get ERC20 balance for forms (regular DMT balance)
   const { data: erc20Balance } = useReadContract({
@@ -61,7 +75,7 @@ export function SnowPay() {
   }) as { data: bigint };
 
   // Get balance - use decrypted balance for Total Balance (e.DMT)
-  const encryptedBalance = decryptedBalance ?? 0n;
+  const totalBalance = decryptedBalance ?? 0n;
   // Use ERC20 balance for forms (DMT)
   const formBalance = erc20Balance ?? 0n;
 
@@ -111,7 +125,7 @@ export function SnowPay() {
   return (
     <>
       <Dashboard
-        balance={encryptedBalance}
+        balance={totalBalance}
         isConnected={isConnected}
         isDecryptionKeySet={isDecryptionKeySet}
         isRegistered={isRegistered}
@@ -130,6 +144,7 @@ export function SnowPay() {
         eerc={eercOperations}
         onSuccess={handleOperationSuccess}
         balance={formBalance}
+        encryptedBalance={totalBalance}
       />
     </>
   );

@@ -28,7 +28,7 @@ export function BalanceCard({ balance, isPrivate = true }: BalanceCardProps) {
         <div className="text-3xl font-bold">
           {showBalance ? (
             <>
-              {parseFloat(formattedBalance).toFixed(2)}
+              {parseFloat(formattedBalance).toFixed(6)}
               <span className="text-lg font-normal ml-1 opacity-75">e.DMT</span>
             </>
           ) : (
