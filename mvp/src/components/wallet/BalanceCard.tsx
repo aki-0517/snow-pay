@@ -10,7 +10,7 @@ interface BalanceCardProps {
 export function BalanceCard({ balance, isPrivate = true }: BalanceCardProps) {
   const [showBalance, setShowBalance] = useState(true);
   
-  const formattedBalance = formatUnits(balance, 6); // USDC has 6 decimals
+  const formattedBalance = formatUnits(balance, 6); // DMT has 6 decimals
 
   return (
     <div className="bg-gradient-to-br from-snow-primary to-snow-secondary p-6 rounded-xl text-white shadow-lg">
@@ -28,8 +28,8 @@ export function BalanceCard({ balance, isPrivate = true }: BalanceCardProps) {
         <div className="text-3xl font-bold">
           {showBalance ? (
             <>
-              ${parseFloat(formattedBalance).toFixed(2)}
-              <span className="text-lg font-normal ml-1 opacity-75">USDC</span>
+              {parseFloat(formattedBalance).toFixed(2)}
+              <span className="text-lg font-normal ml-1 opacity-75">e.DMT</span>
             </>
           ) : (
             "••••••"

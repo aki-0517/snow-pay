@@ -37,7 +37,7 @@ export function SimpleDeposit({ eerc, onSuccess, balance }: SimpleDepositProps) 
 
     try {
       setLoading(true);
-      // Parse amount to BigInt with 6 decimals (USDC)
+      // Parse amount to BigInt with 6 decimals (DMT)
       const parsedAmount = parseUnits(amount, 6);
       await eerc.deposit(parsedAmount);
       onSuccess();
@@ -55,11 +55,11 @@ export function SimpleDeposit({ eerc, onSuccess, balance }: SimpleDepositProps) 
       <div>
         <div className="flex justify-between items-center mb-2">
           <label className="block text-sm font-medium text-snow-dark">
-            Amount (USDC)
+            Amount (DMT)
           </label>
           {balance !== undefined && (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-snow-gray">Balance: {formattedBalance} USDC</span>
+              <span className="text-sm text-snow-gray">Balance: {formattedBalance} DMT</span>
               <button
                 type="button"
                 onClick={handleMaxClick}

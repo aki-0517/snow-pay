@@ -9,11 +9,13 @@ import {
   useAccount,
   usePublicClient,
   useWalletClient,
+  useReadContract,
 } from "wagmi";
 import { avalancheFuji } from "wagmi/chains";
 import { Dashboard } from "../components/wallet/Dashboard";
 import { OperationsModal } from "../components/wallet/OperationsModal";
 import { CIRCUIT_CONFIG, CONTRACTS } from "../config/contracts";
+import { DEMO_TOKEN_ABI as erc20Abi } from "../pkg/constants";
 
 type OperationType = "deposit" | "withdraw" | "transfer" | null;
 
@@ -22,7 +24,7 @@ export function SnowPay() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isGeneratingKey, setIsGeneratingKey] = useState(false);
   
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient({ chainId: avalancheFuji.id });
 
@@ -49,8 +51,19 @@ export function SnowPay() {
     refetchBalance,
   } = useEncryptedBalance(CONTRACTS.ERC20);
 
-  // Get balance - use decrypted balance from the hook
-  const balance = decryptedBalance ?? 0n;
+  // Get ERC20 balance for forms (regular DMT balance)
+  const { data: erc20Balance } = useReadContract({
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+    query: { enabled: !!address },
+    address: CONTRACTS.ERC20,
+  }) as { data: bigint };
+
+  // Get balance - use decrypted balance for Total Balance (e.DMT)
+  const encryptedBalance = decryptedBalance ?? 0n;
+  // Use ERC20 balance for forms (DMT)
+  const formBalance = erc20Balance ?? 0n;
 
   const handleGenerateKey = async () => {
     if (!generateDecryptionKey || !isConnected) return;
@@ -98,7 +111,7 @@ export function SnowPay() {
   return (
     <>
       <Dashboard
-        balance={balance}
+        balance={encryptedBalance}
         isConnected={isConnected}
         isDecryptionKeySet={isDecryptionKeySet}
         isRegistered={isRegistered}
@@ -116,7 +129,7 @@ export function SnowPay() {
         onClose={() => setCurrentOperation(null)}
         eerc={eercOperations}
         onSuccess={handleOperationSuccess}
-        balance={balance}
+        balance={formBalance}
       />
     </>
   );

@@ -131,7 +131,7 @@ export function ConverterMode({
 					<div className="text-cyber-green">Balance</div>
 					<div className="text-cyber-green/80 break-all flex flex-row">
 						{formatDisplayAmount(erc20Balance ?? 0n, erc20Decimals)}{" "}
-						{erc20Symbol}
+						DMT
 						<RightTooltip
 							content="You can only request test tokens once every hour."
 							id="request-erc20-tooltip"
@@ -164,7 +164,7 @@ export function ConverterMode({
 					<div className="text-cyber-green/80 break-all flex flex-row">
 						{approveAmount === MAX_UINT256
 							? "MAX"
-							: `${formatDisplayAmount(approveAmount ?? 0n)} ${erc20Symbol}`}
+							: `${formatDisplayAmount(approveAmount ?? 0n)} DMT`}
 
 						<RightTooltip
 							content="The maximum amount of ERC-20 tokens that can be approved."
@@ -232,7 +232,7 @@ export function ConverterMode({
 					<div className="text-cyber-green/80 break-all">
 						<span className="text-cyber-green">
 							{formatDisplayAmount(decryptedBalance)}
-							{` e.${erc20Symbol}`}
+							{` e.DMT`}
 						</span>
 					</div>
 				</div>
