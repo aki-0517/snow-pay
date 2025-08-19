@@ -82,7 +82,12 @@ contract DeployContracts is Script {
             "}"
         );
         
-        vm.writeFile("deployment-addresses.json", deploymentInfo);
-        console.log("Deployment addresses saved to deployment-addresses.json");
+        try vm.writeFile("deployment-addresses.json", deploymentInfo) {
+            console.log("Deployment addresses saved to deployment-addresses.json");
+        } catch {
+            console.log("Warning: Could not save deployment addresses to file");
+            console.log("Please manually save the following addresses:");
+            console.log(deploymentInfo);
+        }
     }
 }
