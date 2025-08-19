@@ -5,6 +5,9 @@ export const CONTRACTS = {
 	ERC20: "0xb0Fe621B4Bd7fe4975f7c58E3D6ADaEb2a2A35CD",
 } as const;
 
+// Import Fuji contracts configuration
+export { FUJI_CONTRACTS, FUJI_NETWORK, FUJI_EXPLORER } from "./fuji-contracts";
+
 // Circuit configuration
 export const CIRCUIT_CONFIG = {
 	register: {
