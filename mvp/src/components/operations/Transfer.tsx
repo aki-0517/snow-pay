@@ -1,20 +1,29 @@
 import { useState } from "react";
 import { Bounce, toast } from "react-toastify";
 import { useAccount } from "wagmi";
+import { formatUnits } from "viem";
 
 interface TransferProps {
 	handlePrivateTransfer: (to: string, amount: string) => Promise<void>;
 	isDecryptionKeySet: boolean;
+	balance?: bigint;
 }
 
 export function Transfer({
 	handlePrivateTransfer,
 	isDecryptionKeySet,
+	balance,
 }: TransferProps) {
 	const { address } = useAccount();
 	const [transferAmount, setTransferAmount] = useState<string>("");
 	const [to, setTo] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
+	
+	const formattedBalance = balance ? formatUnits(balance, 18) : "0.00";
+	
+	const handleMaxClick = () => {
+		setTransferAmount(formattedBalance);
+	};
 
 	return (
 		<>
@@ -43,6 +52,19 @@ export function Transfer({
 					placeholder={"Recipient address"}
 					className="flex-1 bg-cyber-dark text-cyber-gray px-4 py-0.5 rounded-lg border border-cyber-green/20 focus:border-cyber-green focus:ring-1 focus:ring-cyber-green outline-none font-mono w-full mb-2"
 				/>
+				{balance !== undefined && (
+					<div className="flex justify-between items-center mb-2">
+						<span className="text-sm text-cyber-gray font-mono">Balance: {formattedBalance} ETH</span>
+						<button
+							type="button"
+							onClick={handleMaxClick}
+							className="text-cyber-green text-sm font-mono px-2 py-1 rounded border border-cyber-green/40 hover:border-cyber-green/80 transition-colors"
+							disabled={loading}
+						>
+							MAX
+						</button>
+					</div>
+				)}
 				<input
 					type="text"
 					value={transferAmount}

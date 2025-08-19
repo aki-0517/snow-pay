@@ -1,19 +1,26 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FaPaperPlane } from "react-icons/fa";
-import { parseUnits } from "viem";
+import { parseUnits, formatUnits } from "viem";
 
 interface SimpleTransferProps {
   eerc: {
     privateTransfer?: (recipient: string, amount: bigint) => Promise<any>;
   };
   onSuccess: () => void;
+  balance?: bigint;
 }
 
-export function SimpleTransfer({ eerc, onSuccess }: SimpleTransferProps) {
+export function SimpleTransfer({ eerc, onSuccess, balance }: SimpleTransferProps) {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  const formattedBalance = balance ? formatUnits(balance, 6) : "0.00";
+  
+  const handleMaxClick = () => {
+    setAmount(formattedBalance);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,9 +68,24 @@ export function SimpleTransfer({ eerc, onSuccess }: SimpleTransferProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-snow-dark mb-2">
-          Amount (USDC)
-        </label>
+        <div className="flex justify-between items-center mb-2">
+          <label className="block text-sm font-medium text-snow-dark">
+            Amount (USDC)
+          </label>
+          {balance !== undefined && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-snow-gray">Balance: {formattedBalance} USDC</span>
+              <button
+                type="button"
+                onClick={handleMaxClick}
+                className="text-snow-primary text-sm px-2 py-1 rounded border border-snow-primary/40 hover:border-snow-primary/80 transition-colors"
+                disabled={loading}
+              >
+                MAX
+              </button>
+            </div>
+          )}
+        </div>
         <input
           type="number"
           step="0.01"

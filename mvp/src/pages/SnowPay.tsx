@@ -116,6 +116,7 @@ export function SnowPay() {
         onClose={() => setCurrentOperation(null)}
         eerc={eercOperations}
         onSuccess={handleOperationSuccess}
+        balance={balance}
       />
     </>
   );

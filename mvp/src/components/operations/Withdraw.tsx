@@ -27,6 +27,19 @@ export function Withdraw({
 			</div>
 
 			<div>
+				{balance !== undefined && (
+					<div className="flex justify-between items-center mb-2">
+						<span className="text-sm text-cyber-gray font-mono">Balance: {formattedBalance} ETH</span>
+						<button
+							type="button"
+							onClick={handleMaxClick}
+							className="text-cyber-green text-sm font-mono px-2 py-1 rounded border border-cyber-green/40 hover:border-cyber-green/80 transition-colors"
+							disabled={loading}
+						>
+							MAX
+						</button>
+					</div>
+				)}
 				<input
 					type="text"
 					value={withdrawAmount}

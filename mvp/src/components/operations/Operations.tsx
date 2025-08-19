@@ -13,6 +13,7 @@ interface OperationsProps {
 	mode: "standalone" | "converter";
 	isDecryptionKeySet: boolean;
 	refetchBalance: () => void;
+	balance?: bigint;
 }
 
 export function Operations({
@@ -24,6 +25,7 @@ export function Operations({
 	isDecryptionKeySet,
 	mode,
 	refetchBalance,
+	balance,
 }: OperationsProps) {
 	const handlePrivateMint_ = async (amount: bigint) => {
 		await handlePrivateMint(amount);
@@ -85,6 +87,7 @@ export function Operations({
 						<Deposit
 							handlePrivateDeposit={handlePrivateDeposit_}
 							isDecryptionKeySet={isDecryptionKeySet}
+							balance={balance}
 						/>
 					</div>
 
@@ -92,6 +95,7 @@ export function Operations({
 						<Withdraw
 							handlePrivateWithdraw={handlePrivateWithdraw_}
 							isDecryptionKeySet={isDecryptionKeySet}
+							balance={balance}
 						/>
 					</div>
 				</div>
@@ -101,6 +105,7 @@ export function Operations({
 				<Transfer
 					handlePrivateTransfer={handlePrivateTransfer_}
 					isDecryptionKeySet={isDecryptionKeySet}
+					balance={balance}
 				/>
 			</div>
 		</div>
