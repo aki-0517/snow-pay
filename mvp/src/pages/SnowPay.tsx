@@ -14,6 +14,9 @@ import {
 import { avalancheFuji } from "wagmi/chains";
 import { Dashboard } from "../components/wallet/Dashboard";
 import { OperationsModal } from "../components/wallet/OperationsModal";
+import { TransactionHistory } from "../components/features/TransactionHistory";
+import { QRPayment } from "../components/features/QRPayment";
+import { AddressBook } from "../components/features/AddressBook";
 import { CIRCUIT_CONFIG, CONTRACTS } from "../config/contracts";
 import { DEMO_TOKEN_ABI as erc20Abi } from "../pkg/constants";
 
@@ -23,6 +26,7 @@ export function SnowPay() {
   const [currentOperation, setCurrentOperation] = useState<OperationType>(null);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isGeneratingKey, setIsGeneratingKey] = useState(false);
+  const [prefilledAddress, setPrefilledAddress] = useState<string>("");
   
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
@@ -111,8 +115,14 @@ export function SnowPay() {
 
   const handleOperationSuccess = () => {
     setCurrentOperation(null);
+    setPrefilledAddress("");
     toast.success("Transaction completed successfully!");
     refetchBalance();
+  };
+
+  const handleSendToContact = (contactAddress: string) => {
+    setPrefilledAddress(contactAddress);
+    setCurrentOperation("transfer");
   };
 
   // Create EERC operations object for the modal
@@ -138,13 +148,26 @@ export function SnowPay() {
         onTransfer={() => setCurrentOperation("transfer")}
       />
       
+      {/* Enhanced Features Section - Only show after decryption key is generated */}
+      {isDecryptionKeySet && (
+        <div className="mt-12 space-y-8">
+          <TransactionHistory />
+          <QRPayment />
+          <AddressBook onSendToContact={handleSendToContact} />
+        </div>
+      )}
+      
       <OperationsModal
         operation={currentOperation}
-        onClose={() => setCurrentOperation(null)}
+        onClose={() => {
+          setCurrentOperation(null);
+          setPrefilledAddress("");
+        }}
         eerc={eercOperations}
         onSuccess={handleOperationSuccess}
         balance={formBalance}
         encryptedBalance={totalBalance}
+        prefilledAddress={prefilledAddress}
       />
     </>
   );

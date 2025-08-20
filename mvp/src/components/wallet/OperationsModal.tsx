@@ -12,9 +12,10 @@ interface OperationsModalProps {
   onSuccess: () => void;
   balance?: bigint; // ERC20 balance for deposit
   encryptedBalance?: bigint; // Encrypted balance for send/withdraw
+  prefilledAddress?: string; // Pre-filled recipient address for transfer
 }
 
-export function OperationsModal({ operation, onClose, eerc, onSuccess, balance, encryptedBalance }: OperationsModalProps) {
+export function OperationsModal({ operation, onClose, eerc, onSuccess, balance, encryptedBalance, prefilledAddress }: OperationsModalProps) {
   if (!operation) return null;
 
   const titles = {
@@ -46,7 +47,7 @@ export function OperationsModal({ operation, onClose, eerc, onSuccess, balance, 
             <SimpleWithdraw eerc={eerc} onSuccess={onSuccess} balance={encryptedBalance} />
           )}
           {operation === "transfer" && (
-            <SimpleTransfer eerc={eerc} onSuccess={onSuccess} balance={encryptedBalance} />
+            <SimpleTransfer eerc={eerc} onSuccess={onSuccess} balance={encryptedBalance} prefilledAddress={prefilledAddress} />
           )}
         </div>
       </div>

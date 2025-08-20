@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaPaperPlane } from "react-icons/fa";
 import { parseUnits, formatUnits } from "viem";
@@ -9,12 +9,20 @@ interface SimpleTransferProps {
   };
   onSuccess: () => void;
   balance?: bigint;
+  prefilledAddress?: string;
 }
 
-export function SimpleTransfer({ eerc, onSuccess, balance }: SimpleTransferProps) {
+export function SimpleTransfer({ eerc, onSuccess, balance, prefilledAddress }: SimpleTransferProps) {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Set prefilled address when component mounts or prefilledAddress changes
+  useEffect(() => {
+    if (prefilledAddress) {
+      setRecipient(prefilledAddress);
+    }
+  }, [prefilledAddress]);
   
   const formattedBalance = balance ? formatUnits(balance * 1000000n, 6) : "0.00";
   
