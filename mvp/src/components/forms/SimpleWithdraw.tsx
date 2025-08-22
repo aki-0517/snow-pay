@@ -36,8 +36,8 @@ export function SimpleWithdraw({ eerc, onSuccess, balance }: SimpleWithdrawProps
 
     try {
       setLoading(true);
-      // Parse amount to BigInt with 6 decimals (e.DMT)
-      const parsedAmount = parseUnits(amount, 6);
+      // Parse amount to BigInt with 6 decimals (e.DMT) and divide by 10^6 to match the display format
+      const parsedAmount = parseUnits(amount, 6) / 1000000n;
       await eerc.withdraw(parsedAmount);
       onSuccess();
       setAmount("");
