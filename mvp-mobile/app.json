@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "mvp-mobile",
-    "slug": "mvp-mobile",
+    "name": "SnowPay Mobile",
+    "slug": "snowpay-mobile", 
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mvpmobile",
+    "scheme": "snowpay",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
